@@ -1,0 +1,27 @@
+---
+import { sluglify } from "@/utils/sluglify"
+
+export interface Props {
+  name: string
+  avatar: string
+}
+
+const { avatar, name } = Astro.props
+---
+
+<a href={`/${sluglify(name)}`}>
+  <article
+    class="bg-slate-950 p-4 rounded-md hover:bg-slate-900 focus:bg-slate-900 transition-colors"
+  >
+    <img
+      src={avatar}
+      alt={name}
+      width="200"
+      height="200"
+      class="rounded-full aspect-square mx-auto"
+    />
+
+    <h6 class="font-bold">{name}</h6>
+    <small>Artist</small>
+  </article>
+</a>
