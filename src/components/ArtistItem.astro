@@ -19,9 +19,15 @@ const { avatar, name } = Astro.props
       width="200"
       height="200"
       class="rounded-full aspect-square mx-auto"
+      style={`view-transition-name: artist-image-${sluglify(name)}`}
     />
 
-    <h6 class="font-bold">{name}</h6>
+    <h6
+      class="font-bold"
+      style={`view-transition-name: artist-name-${sluglify(name)}`}
+    >
+      {name}
+    </h6>
     <small>Artist</small>
   </article>
 </a>

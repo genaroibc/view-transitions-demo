@@ -1,4 +1,7 @@
 ---
+import "@/styles/globals.css"
+import Header from "@/shared/Header.astro"
+
 interface Props {
   title: string
   description: string
@@ -18,13 +21,53 @@ const { description, title } = Astro.props
     <title>{title}</title>
   </head>
   <body class="max-w-7xl mx-auto">
+    <Header />
     <slot />
   </body>
 </html>
 
-<style>
-  :root {
-    @apply bg-sky-950;
-    @apply text-gray-200;
+<script>
+  declare global {
+    interface Document {
+      startViewTransition(callback: () => void): void
+    }
+
+    interface Window {
+      navigation: {
+        addEventListener(
+          event: "navigate",
+          callback: (event: {
+            destination: { url: string }
+            intercept: (options: {
+              handler: () => Promise<void>
+            }) => Promise<void>
+          }) => void
+        ): void
+      }
+    }
   }
-</style>
+
+  if (window.navigation && document.startViewTransition) {
+    window.navigation.addEventListener("navigate", event => {
+      const toURL = new URL(event.destination.url)
+
+      if (location.origin !== toURL.origin) return
+
+      event.intercept({
+        async handler() {
+          const response = await fetch(toURL.pathname)
+          const html = await response.text()
+
+          const [, content = ""] =
+            html.match(/<body[^>]*>([\s\S]*)<\/body>/i) ?? []
+
+          document.startViewTransition(() => {
+            // scroll top
+            document.body.innerHTML = content
+            document.documentElement.scrollTop = 0
+          })
+        }
+      })
+    })
+  }
+</script>

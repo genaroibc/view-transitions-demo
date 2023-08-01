@@ -35,8 +35,14 @@ if (!artistData) return Astro.redirect("/404")
       src={artistData.avatar}
       alt={artistData.name}
       class="w-32 h-32 rounded-full"
+      style={`view-transition-name: artist-image-${sluglify(artistData.name)}`}
     />
 
-    <h1 class="font-black text-4xl">{artistData.name}</h1>
+    <h1
+      class="font-black text-4xl"
+      style={`view-transition-name: artist-name-${sluglify(artistData.name)}`}
+    >
+      {artistData.name}
+    </h1>
   </main>
 </ArtistLayout>
