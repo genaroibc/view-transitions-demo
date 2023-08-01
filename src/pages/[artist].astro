@@ -1,0 +1,42 @@
+---
+import ArtistLayout from "@/layouts/ArtistLayout.astro"
+import { getArtists } from "@/services/getArtists"
+import { sluglify, unsluglify } from "@/utils/sluglify"
+
+export async function getStaticPaths() {
+  const artists = await getArtists()
+
+  return artists.map(artist => ({
+    params: { artist: sluglify(artist.name) }
+  }))
+}
+
+const { artist } = Astro.params ?? {}
+
+if (!artist) return Astro.redirect("/404")
+
+const artists = await getArtists()
+const artistData = artists.find(({ name }) => name === unsluglify(artist))
+
+if (!artistData) return Astro.redirect("/404")
+---
+
+<ArtistLayout>
+  <main>
+    <img
+      src={artistData.cover}
+      alt={`${artistData.name}'s cover`}
+      width="600"
+      height="200"
+      class="w-full h-auto"
+    />
+
+    <img
+      src={artistData.avatar}
+      alt={artistData.name}
+      class="w-32 h-32 rounded-full"
+    />
+
+    <h1 class="font-black text-4xl">{artistData.name}</h1>
+  </main>
+</ArtistLayout>
