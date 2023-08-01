@@ -58,12 +58,13 @@ const { description, title } = Astro.props
           const response = await fetch(toURL.pathname)
           const html = await response.text()
 
-          const [, content = ""] =
-            html.match(/<body[^>]*>([\s\S]*)<\/body>/i) ?? []
+          const [, title = ""] = html.match(/<title>([\s\S]*)<\/title>/i) ?? []
+          const [, content = ""] = html.match(/<body>([\s\S]*)<\/body>/i) ?? []
 
           document.startViewTransition(() => {
             // scroll top
             document.body.innerHTML = content
+            document.title = title
             document.documentElement.scrollTop = 0
           })
         }
