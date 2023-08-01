@@ -1,7 +1,16 @@
 ---
+interface Props {
+  artistName: string
+}
+
+const { artistName } = Astro.props
+
 import MainLayout from "./MainLayout.astro"
 ---
 
-<MainLayout>
+<MainLayout
+  description={`Discover ${artistName}'s songs and albums`}
+  title={artistName}
+>
   <slot />
 </MainLayout>

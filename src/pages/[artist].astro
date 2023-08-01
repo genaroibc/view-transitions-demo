@@ -21,7 +21,7 @@ const artistData = artists.find(({ name }) => name === unsluglify(artist))
 if (!artistData) return Astro.redirect("/404")
 ---
 
-<ArtistLayout>
+<ArtistLayout artistName={artistData.name}>
   <main>
     <img
       src={artistData.cover}
