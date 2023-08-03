@@ -1,4 +1,9 @@
 :root {
-  @apply bg-sky-950;
+  --gray-0: #121212;
+  --gray-1: #181818;
+  --gray-2: #282828;
+
+  background-color: var(--gray-0);
+
   @apply text-gray-200;
 }
