@@ -1,6 +1,8 @@
 ---
 import ArtistLayout from "@/layouts/ArtistLayout.astro"
+import Song from "@/components/shared/Song.astro"
 import { getArtists } from "@/services/getArtists"
+import { getSongs } from "@/services/getSongs"
 import { sluglify, unsluglify } from "@/utils/sluglify"
 
 export async function getStaticPaths() {
@@ -19,30 +21,58 @@ const artists = await getArtists()
 const artistData = artists.find(({ name }) => name === unsluglify(artist))
 
 if (!artistData) return Astro.redirect("/404")
+
+const songs = await getSongs()
 ---
 
 <ArtistLayout artistName={artistData.name}>
-  <main>
-    <img
-      src={artistData.cover}
-      alt={`${artistData.name}'s cover`}
-      width="600"
-      height="200"
-      class="w-full h-auto"
-    />
-
+  <header
+    class="py-12 px-6 bg-emerald-700 flex items-center gap-4 sticky top-0 left-0 right-0 overflow-hidden"
+  >
     <img
       src={artistData.avatar}
       alt={artistData.name}
-      class="w-32 h-32 rounded-full"
+      width="256"
+      height="256"
+      class="w-64 h-64 rounded-full"
       style={`view-transition-name: artist-image-${sluglify(artistData.name)}`}
     />
-
     <h1
-      class="font-black text-4xl"
+      class="font-black text-7xl text-gray-50 overflow-hidden text-ellipsis whitespace-nowrap max-w-sm block"
       style={`view-transition-name: artist-name-${sluglify(artistData.name)}`}
     >
       {artistData.name}
     </h1>
+
+    <span
+      class="bg-gradient-to-t from-black/50 to-black/0 w-full h-32 absolute bottom-0 right-0 left-0"
+    ></span>
+  </header>
+
+  <main id="songs-container" class="grid grid-cols-1">
+    {songs.map(song => <Song {...song} />)}
   </main>
 </ArtistLayout>
+
+<style>
+  header {
+    view-timeline-name: --songs-container;
+    animation-timeline: --songs-container;
+    animation-name: stick;
+    animation-fill-mode: both;
+    animation-range: entry 75% cover 90%;
+    overflow: hidden;
+  }
+
+  @keyframes stick {
+    from {
+      height: 26rem;
+      font-size: 1rem;
+    }
+
+    to {
+      height: 50px;
+      font-size: 4px;
+    }
+  }
+</style>
