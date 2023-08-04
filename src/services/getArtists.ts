@@ -1,9 +1,4 @@
-type Artist = {
-  id: number
-  name: string
-  cover: string
-  avatar: string
-}
+import type { Artist } from "@/types"
 
 export async function getArtists(): Promise<Artist[]> {
   return [
